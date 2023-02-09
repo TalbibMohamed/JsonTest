@@ -1,3 +1,4 @@
+
 $(document).ready(function () {
     $.ajax({
         url: "/users",
@@ -17,12 +18,14 @@ $(document).ready(function () {
 
     });
 });
+
 $("#add-user-form").submit(function (event) {
     event.preventDefault();
     $.ajax({
         url: "/AddUser",
         type: "POST",
         contentType: "application/json",
+        timeout: 1000,
         data: JSON.stringify({
             name: $("#name").val()
 
@@ -35,48 +38,40 @@ $("#add-user-form").submit(function (event) {
                 "<td><button class='delete-button' data-user-id='" + user.id + "' onclick='deleteUser()' >Delete</button></td>" +
                 "</tr>"
             );
+            Swal.fire({
+                icon: 'success',
+                title: 'noice',
+                text: 'Cool!',
+              })
+        },
+
+        
+        error : function (xhr, status, error) {
+            Swal.fire({
+                icon: 'info',
+                title: 'noice',
+                text: 'Cool!',
+              })
         }
     });
 });
-// $(".delete-button").click(function (e) {
-//     e.preventDefault();
-//     let userId = $(this).data("id");
-//     $.ajax({
-//         url: "/users/" + userId,
-//         type: "DELETE",
-//         success: function (result) {
-//             console.log("User deleted");
-//             // Remove the user from the list
-//             $("button[data-user-id='" + userId + "']").closest("tr").remove();
-//         }
-//     });
 
 
-// });
 
-$('.delete-button2').click(function (e) {
-    e.preventDefault();
-    let userId = $(this).data("user-id");
-    alert(userId);
-    alert(this);
-
-});
-function deleteUser() {
-    alert(event);
-    // e.preventDefault();
-    let userId = $(event).data("user-id");
-    alert(userId);
-    // alert($("h1").data("id"))
-    // let userId = $(this).data("user-id");
-    // alert(userId);
-    // $.ajax({
-    //     url: "/users/" + userId,
-    //     type: "DELETE",
-    //     success: function (result) {
-    //         console.log("User deleted");
-    //         // Remove the user from the list
-    //         $("button[data-user-id='" + userId + "']").closest("tr").remove();
-    //     }
-    // });
-
+function deleteUser() {   
+    var userid = event.target.getAttribute("data-user-id");
+    $.ajax({
+        url: "/users/"+userid,
+        type: "DELETE",
+        contentType: "application/json",
+       
+        success: function (user) {
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'noice',
+                text: 'Cool!',
+              })
+        },
+    });
 }
